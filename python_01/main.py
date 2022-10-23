@@ -11,7 +11,6 @@ def main(dots):
     text_data.close()
     
     prompt = f'{contents}\n以下の{dots}点でまとめる。'
-    print(prompt)
     result = text_summary(prompt)
 
     return result
