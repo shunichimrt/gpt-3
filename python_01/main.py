@@ -1,6 +1,20 @@
+import sys
 import openai
+from openaienv import OpenAiEnv
 
-openai.api_key = ""
+openai.api_key = OpenAiEnv.OPENAI_API_KEY
+
+def main(dots):
+    
+    text_data = open("./target.txt", "r")
+    contents = text_data.read().replace('　',' ')
+    text_data.close()
+    
+    prompt = f'{contents}\n以下の{dots}点でまとめる。'
+    print(prompt)
+    result = text_summary(prompt)
+
+    return result
 
 def text_summary(prompt):
     response = openai.Completion.create(
@@ -15,25 +29,9 @@ def text_summary(prompt):
 
     return response["choices"][0]["text"].replace('\n','')
 
-def crean_text(text):
-    text= text.replace('　',' ')
-    return text
-
-text = '''
-Wikipedia is a multilingual free online encyclopedia written and 
-maintained by a community of volunteers through open collaboration 
-and a wiki-based editing system. Its editors are known as Wikipedians. 
-Wikipedia is the largest and most-read reference work in history. 
-It is consistently one of the 10 most popular websites ranked by the 
-Similarweb and formerly Alexa; as of 2022, Wikipedia was ranked the 7th most popular site.
-It is hosted by the Wikimedia Foundation, an American non-profit organization funded mainly 
-through donations.
-'''
-
-prompt ='''
-つまり、
-'''
-
-prompt = crean_text(text) +  prompt
-
-print(text_summary(prompt))
+if __name__ == '__main__':
+    args = sys.argv
+    dots = args[1]
+    
+    summary = main(dots)
+    print(summary)
